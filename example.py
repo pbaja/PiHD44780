@@ -1,4 +1,4 @@
-from HD44780 import HD44780
+from LimeLCD import HD44780
 from time import sleep, time, localtime, strftime
 
 # HD44780(ADDRESS,PORT,BACKLIGHT)
