@@ -32,7 +32,9 @@
    - VCC to 5V
    - SDA to SDA (GPIO2)
    - SCL to SCL (GPIO3)
+
 5. Reboot raspberry to changes take effect
+
 6. Check LCD address, mine is 0x27
 
     ```

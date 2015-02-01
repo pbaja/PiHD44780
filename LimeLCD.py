@@ -1,16 +1,11 @@
 import smbus
 from time import sleep
 
-# LCD Address
-ADDRESS = 0x27
-
-# flags for backlight control
-LCD_BACKLIGHT = 0x08
-LCD_NOBACKLIGHT = 0x00
-
 En = 0b00000100 # Enable bit
 Rw = 0b00000010 # Read/Write bit
 Rs = 0b00000001 # Register select bit
+BLon = 0x08     # Backlight on
+BLoff = 0x00    # Backlight off
 
 class HD44780:
 
@@ -18,10 +13,11 @@ class HD44780:
 #            LOW LEVEL FUNCTIONS, CAN'T TOUCH THIS!             #
 #################################################################
 
-	def __init__(self,addr=0x27,port=1):
+	def __init__(self,addr=0x27,port=1,backlight=True):
 		self.currentline = 0
 		self.bus = smbus.SMBus(port)
 		self.addr = addr;
+		self.setBacklight(backlight)
 
 		#Prepare LCD
 		self._cmdWrite(0x03)
@@ -45,11 +41,11 @@ class HD44780:
 		sleep(0.2)	
 	def _busWrite(self, data):
 		#Set data pins
-		self.bus.write_byte(self.addr,data | LCD_BACKLIGHT)
+		self.bus.write_byte(self.addr,data | self.backlight)
 		#Send data to lcd
-		self.bus.write_byte(self.addr,data | En | LCD_BACKLIGHT)
+		self.bus.write_byte(self.addr,data | En | self.backlight)
 		sleep(.0005)
-		self.bus.write_byte(self.addr,((data & ~En) | LCD_BACKLIGHT))
+		self.bus.write_byte(self.addr,((data & ~En) | self.backlight))
 		sleep(.0001)	
 	def _cmdWrite(self, cmd, mode=0):
 		#Send first 4 bytes
@@ -65,7 +61,7 @@ class HD44780:
 		positions = [0x40,0x48,0x50,0x58,0x60,0x68,0x70,0x78]
 		self._cmdWrite(positions[pos])
 		for i in char:
-			self._cmdWrite(i,1)
+			self._cmdWrite(i,Rs)
 
 	def customChar(self, charId):
 		self._cmdWrite(charId,Rs)
@@ -97,16 +93,18 @@ class HD44780:
 				sleep(time)
 				self._cmdWrite(ord(char),Rs)
 
-	def clear(self):        # Clear display 
+	def clear(self):               # Clear display 
 		self._cmdWrite(0x01)
-	def scrollRight(self):  # Move all characters right
+	def scrollRight(self):         # Move all characters right
 		self._cmdWrite(0x1E)
-	def scrollLeft(self):   # Move all characters left
+	def scrollLeft(self):          # Move all characters left
 		self._cmdWrite(0x18)
-	def blank(self):        # Hide all characters
+	def blank(self):               # Hide all characters
 		self._cmdWrite(0x08)
-	def restore(self):      # Show all characters
+	def restore(self):             # Show all characters
 		self._cmdWrite(0x0C)
+	def setBacklight(self, value): # Power on/off backlight
+		self.backlight = BLon if value else BLoff
 
 	def home(self):         # Move cursor to left, top corner
 		self._cmdWrite(0x02)
