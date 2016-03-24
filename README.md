@@ -7,19 +7,11 @@
 
 # Usage
 
-1. Add these two lines at end of the "/etc/modules" file:
-
-    ```
-    i2c-bcm2708 
-    i2c-dev
-    ```
-
-2. Be sure to comment out these two lines in "/etc/modprobe.d/raspi-blacklist.conf"
-
-    ```
-    blacklist spi-bcm2708
-    blacklist i2c-bcm2708
-    ```
+1. Enable I2C interface with raspi-config
+   - In console execute "raspi-config"
+   - Select Advanced Options, I2C, Yes, Ok, Yes, Ok
+   - With right arrow key select Finish and select Yes for reboot now.
+   - After reboot I2C should be enabled
 
 3. Install python library and tools
 
