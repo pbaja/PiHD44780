@@ -8,7 +8,7 @@
 # Usage
 
 1. Enable I2C interface with raspi-config
-   - In console execute "raspi-config"
+   - Open "raspi-config"
    - Select Advanced Options, I2C, Yes, Ok, Yes, Ok
    - With right arrow key select Finish and select Yes for reboot now.
    - After reboot I2C should be enabled
@@ -36,7 +36,7 @@
 7. Download library and run example.py
 
     ```
-    git clone https://github.com/SkewPL/LimeLCD.git
-    cd LimeLCD
+    git clone https://github.com/SkewPL/PiHD44780.git
+    cd PiHD44780
     python example.py
     ```
